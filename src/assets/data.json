@@ -1,0 +1,32 @@
+{
+  "users": [
+    {
+      "username": "",
+      "name": "",
+      "surnames": "",
+      "email": "",
+      "password": "",
+      "age": 10,
+      "active": true,
+      "lastLogging": 1650907305760,
+      "creationDate": 1650907305760,
+      "id": 1650907268102
+    },
+    {
+      "id": 1650907305760,
+      "username": "",
+      "name": "name2",
+      "surnames": "",
+      "email": "",
+      "password": "",
+      "age": 0,
+      "active": true,
+      "lastLogging": 1650907305760,
+      "creationDate": 1650907305760
+    }
+  ],
+  "credentials": {
+    "email": "example@example.com",
+    "password": "123456"
+  }
+}
