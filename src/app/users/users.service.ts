@@ -35,7 +35,7 @@ export class UsersService {
     email,
     password,
     age,
-  }: CreateUserDTO): Observable<unknown> {
+  }: CreateUserDTO): Observable<User> {
     const user: User = {
       id: Date.now(),
       username,
@@ -48,7 +48,7 @@ export class UsersService {
       lastLogging: Date.now(),
       creationDate: Date.now(),
     };
-    return this.httpCLient.post(this.URL, user);
+    return this.httpCLient.post<User>(this.URL, user);
   }
 
   updateUser({ id, ...body }: UpdateUserDTO): Observable<User> {
