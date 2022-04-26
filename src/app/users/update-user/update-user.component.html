@@ -1,6 +1,7 @@
-<mat-card>
-  <mat-card-title>Create User</mat-card-title>
-  <ng-container *ngIf="route$ | async">
+<ng-container *ngIf="vm$ | async as user">
+  <mat-card>
+    <mat-card-title>Update user {{ user.username }}</mat-card-title>
+    <mat-card-subtitle>{{ user.surnames }}, {{ user.name }}</mat-card-subtitle>
     <mat-card-content>
       <form [formGroup]="form" (ngSubmit)="onSubmit()">
         <mat-form-field appearance="outline">
@@ -23,7 +24,9 @@
           <mat-label>Age</mat-label>
           <input type="number" matInput formControlName="age" />
         </mat-form-field>
-        <button mat-stroked-button color="warn" type="button">Cancel</button>
+        <a mat-stroked-button color="warn" title="Cancel" [routerLink]="['']">
+          Cancel
+        </a>
         <button
           mat-stroked-button
           color="primary"
@@ -34,5 +37,5 @@
         </button>
       </form>
     </mat-card-content>
-  </ng-container>
-</mat-card>
+  </mat-card>
+</ng-container>

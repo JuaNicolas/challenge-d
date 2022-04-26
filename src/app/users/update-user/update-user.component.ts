@@ -14,6 +14,7 @@ import {
   tap,
   throwError,
 } from 'rxjs';
+import { User } from 'src/app/core/models/user';
 import { FormValidators } from 'src/app/core/validators/form-validators';
 import { UsersService } from '../users.service';
 
@@ -34,7 +35,7 @@ export class UpdateUserComponent implements OnInit {
     age: ['', FormValidators.ageValidators()],
   });
 
-  route$ = this.activedRouter.paramMap.pipe(
+  vm$: Observable<User> = this.activedRouter.paramMap.pipe(
     map((params) => params.get('id')),
     mergeMap((id) =>
       iif(
