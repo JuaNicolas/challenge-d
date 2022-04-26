@@ -1,1 +1,74 @@
-<p>list-user works!</p>
+<ng-container *ngIf="users$ | async as users">
+  <table
+    mat-table
+    [dataSource]="users"
+    multiTemplateDataRows
+    class="mat-elevation-z8"
+  >
+    <ng-container
+      matColumnDef="{{ column }}"
+      *ngFor="let column of displayedColumns"
+    >
+      <th mat-header-cell *matHeaderCellDef>{{ column | titlecase }}</th>
+
+      <ng-container *ngIf="column === 'lastLogging'; else templateName">
+        <th mat-header-cell *matHeaderCellDef>Last Logging</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.lastLogging | date: "medium" }}
+        </td>
+      </ng-container>
+      <ng-template #templateName>
+        <td mat-cell *matCellDef="let element">{{ element[column] }}</td>
+      </ng-template>
+    </ng-container>
+
+    <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+    <ng-container matColumnDef="expandedDetail">
+      <td
+        mat-cell
+        *matCellDef="let element"
+        [attr.colspan]="displayedColumns.length"
+      >
+        <div
+          class="example-element-detail"
+          [@detailExpand]="
+            element == expandedElement ? 'expanded' : 'collapsed'
+          "
+        >
+          <div>
+            <a
+              mat-raised-button
+              color="primary"
+              [title]="'Update ' + element.name"
+              [routerLink]="['/users/update', element.id]"
+            >
+              Edit
+            </a>
+            <a
+              mat-raised-button
+              color="warn"
+              [title]="'Delete ' + element.name"
+              [routerLink]="['/users/delete', element.id]"
+            >
+              Delete
+            </a>
+          </div>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr
+      mat-row
+      *matRowDef="let element; columns: displayedColumns"
+      class="example-element-row"
+      [class.example-expanded-row]="expandedElement === element"
+      (click)="expandedElement = expandedElement === element ? null : element"
+    ></tr>
+    <tr
+      mat-row
+      *matRowDef="let row; columns: ['expandedDetail']"
+      class="example-detail-row"
+    ></tr>
+  </table>
+</ng-container>

@@ -10,12 +10,12 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MatListModule } from '@angular/material/list';
 import { CreateUserComponent } from './create-user/create-user.component';
 import { DeleteUserComponent } from './delete-user/delete-user.component';
 import { ListUserComponent } from './list-user/list-user.component';
 import { UpdateUserComponent } from './update-user/update-user.component';
 import { UsersRoutingModule } from './users-routing.module';
+import { MatTableModule } from '@angular/material/table';
 
 @NgModule({
   declarations: [
@@ -28,7 +28,7 @@ import { UsersRoutingModule } from './users-routing.module';
     CommonModule,
     ReactiveFormsModule,
     UsersRoutingModule,
-    MatListModule,
+    MatTableModule,
     MatFormFieldModule,
     MatCardModule,
     MatButtonModule,
