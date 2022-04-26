@@ -1,1 +1,14 @@
-<p>delete-user works!</p>
+<ng-container *ngIf="vm$ | async as vm">
+  <mat-card>
+    <mat-card-title>Delete user {{ vm.username }}</mat-card-title>
+    <mat-card-subtitle>{{ vm.surnames }},{{ vm.name }}</mat-card-subtitle>
+    <mat-card-actions>
+      <a mat-raised-button color="warn" title="Cancel" [routerLink]="['']">
+        Cancel
+      </a>
+      <button mat-stroked-button color="primary" (click)="deleteUser(vm)">
+        Delete
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</ng-container>
