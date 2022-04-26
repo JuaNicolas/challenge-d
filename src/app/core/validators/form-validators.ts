@@ -1,4 +1,4 @@
-import { FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, Validators } from '@angular/forms';
 
 export class FormValidators {
   private static stringValidators() {
@@ -22,7 +22,7 @@ export class FormValidators {
   }
 
   static matchPasswordsValidators() {
-    return (formGroup: FormGroup) => {
+    return (formGroup: AbstractControl) => {
       const passwordControl = formGroup.get('password');
       const repeatPasswordControl = formGroup.get('repeatPasswordC');
 
