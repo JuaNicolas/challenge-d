@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { combineLatestWith, map } from 'rxjs/operators';
 import { FormValidators } from 'src/app/core/validators/form-validators';
@@ -11,7 +11,7 @@ import { UsersService } from '../users.service';
   styleUrls: ['./create-user.component.scss'],
 })
 export class CreateUserComponent implements OnInit {
-  form: FormGroup = this.fb.group(
+  form: UntypedFormGroup = this.fb.group(
     {
       username: [
         { value: '', disabled: true },
@@ -30,7 +30,7 @@ export class CreateUserComponent implements OnInit {
     }
   );
 
-  constructor(private fb: FormBuilder, private usersService: UsersService) {}
+  constructor(private fb: UntypedFormBuilder, private usersService: UsersService) {}
   ngOnInit(): void {
     const nameValues$: Observable<string> = this.form.get('name')!.valueChanges;
     const surnamesValues$: Observable<string> =

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   catchError,
@@ -24,7 +24,7 @@ import { UsersService } from '../users.service';
   styleUrls: ['./update-user.component.scss'],
 })
 export class UpdateUserComponent implements OnInit {
-  form: FormGroup = this.fb.group({
+  form: UntypedFormGroup = this.fb.group({
     id: this.activedRouter.snapshot.paramMap.get('id'),
     username: [
       { value: '', disabled: true },
@@ -61,7 +61,7 @@ export class UpdateUserComponent implements OnInit {
   );
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private activedRouter: ActivatedRoute,
     private usersService: UsersService,
     private router: Router
