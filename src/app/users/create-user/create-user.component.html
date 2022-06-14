@@ -35,7 +35,9 @@
         <mat-label>Age</mat-label>
         <input matInput formControlName="age" />
       </mat-form-field>
-      <button mat-stroked-button color="warn" type="button">Cancel</button>
+      <a mat-stroked-button color="warn" title="Cancel" [routerLink]="['']">
+        Cancel
+      </a>
       <button
         mat-stroked-button
         color="primary"

@@ -26,14 +26,7 @@ import { UsersService } from '../users.service';
 })
 export class ListUserComponent {
   users$ = this.usersService.getUsers();
-  displayedColumns: string[] = [
-    'username',
-    'name',
-    'surnames',
-    'email',
-    'age',
-    'lastLogging',
-  ];
+  displayedColumns: string[] = ['username', 'age'];
   expandedElement!: User | null;
   constructor(private usersService: UsersService) {}
 }
