@@ -6,9 +6,20 @@
       <a mat-stroked-button color="warn" title="Cancel" [routerLink]="['']">
         Cancel
       </a>
-      <button mat-stroked-button color="primary" (click)="deleteUser(user)">
+      <button mat-stroked-button color="primary" (click)="deleteUser()">
         Delete
       </button>
     </mat-card-actions>
   </mat-card>
+
+  <ng-template #deleteModal>
+    <h1 mat-dialog-title>Delete user {{ user.username }}</h1>
+    <div mat-dialog-content align="center">
+      Would you like to delete this user?
+    </div>
+    <div mat-dialog-actions align="end">
+      <button mat-button mat-dialog-close>No</button>
+      <button mat-button [mat-dialog-close]="user" cdkFocusInitial>Yes</button>
+    </div>
+  </ng-template>
 </ng-container>
