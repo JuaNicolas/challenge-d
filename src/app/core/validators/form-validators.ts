@@ -1,10 +1,6 @@
 import { AbstractControl, Validators } from '@angular/forms';
 
 export class FormValidators {
-  private static stringValidators() {
-    return [Validators.required];
-  }
-
   static usernameValidators() {
     return [Validators.required];
   }
@@ -24,7 +20,7 @@ export class FormValidators {
   static matchPasswordsValidators() {
     return (formGroup: AbstractControl) => {
       const passwordControl = formGroup.get('password');
-      const repeatPasswordControl = formGroup.get('repeatPasswordC');
+      const repeatPasswordControl = formGroup.get('repeatPassword');
 
       if (!passwordControl || !repeatPasswordControl) {
         return null;
@@ -40,7 +36,7 @@ export class FormValidators {
     return [
       Validators.required,
       Validators.pattern(
-        '(?=.*d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*#?&^_-]).{8,}'
+        '(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*#?&^_-]).{8,}'
       ),
     ];
   }
