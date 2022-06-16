@@ -8,7 +8,7 @@ const routes: Routes = [
       import('./users/users.module').then((m) => m.UsersModule),
   },
   {
-    path: '',
+    path: '**',
     redirectTo: 'users',
     pathMatch: 'full',
   },
