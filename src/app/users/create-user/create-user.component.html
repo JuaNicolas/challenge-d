@@ -5,6 +5,7 @@
       <mat-form-field appearance="outline">
         <mat-label>Name</mat-label>
         <input matInput formControlName="name" placeholder="User name" />
+        <mat-error *ngIf="name?.errors"> Please enter a valid name </mat-error>
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>Surnames</mat-label>
@@ -13,6 +14,9 @@
           formControlName="surnames"
           placeholder="User surnames"
         />
+        <mat-error *ngIf="surnames?.errors">
+          Please enter valid surnames
+        </mat-error>
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>Username</mat-label>
@@ -22,18 +26,59 @@
         <mat-label>Email</mat-label>
         <input matInput formControlName="email" placeholder="User email" />
         <mat-icon matSuffix>email</mat-icon>
+        <mat-error *ngIf="email?.errors">
+          Please enter a valid email
+        </mat-error>
       </mat-form-field>
-      <mat-form-field appearance="outline">
-        <mat-label>Password</mat-label>
-        <input matInput formControlName="password" />
-      </mat-form-field>
-      <mat-form-field appearance="outline">
-        <mat-label>Repeat password</mat-label>
-        <input matInput formControlName="repeatPassword" />
-      </mat-form-field>
+      <div>
+        <mat-form-field appearance="outline">
+          <mat-label>Password</mat-label>
+          <input
+            [type]="hidePassword ? 'password' : 'text'"
+            matInput
+            formControlName="password"
+          />
+
+          <mat-icon matSuffix (click)="hidePassword = !hidePassword">{{
+            hidePassword ? "visibility_off" : "visibility"
+          }}</mat-icon>
+
+          <mat-error *ngIf="password?.errors">
+            Please enter a valid password
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Repeat password</mat-label>
+          <input
+            [type]="hideRPassword ? 'password' : 'text'"
+            matInput
+            formControlName="repeatPassword"
+          />
+          <mat-icon matSuffix (click)="hideRPassword = !hideRPassword">{{
+            hideRPassword ? "visibility_off" : "visibility"
+          }}</mat-icon>
+          <mat-error *ngIf="repeatPassword?.errors">
+            Please enter a valid password
+          </mat-error>
+        </mat-form-field>
+
+        <mat-error *ngIf="form?.errors?.['dismatch']">
+          Please verify the password must be equal
+        </mat-error>
+      </div>
       <mat-form-field appearance="outline">
         <mat-label>Age</mat-label>
-        <input matInput formControlName="age" />
+        <input type="number" matInput formControlName="age" />
+        <mat-error *ngIf="age?.errors?.['min']">
+          You must be older than 18
+        </mat-error>
+        <mat-error *ngIf="age?.errors?.['max']">
+          You must be younger than 65
+        </mat-error>
+        <mat-error *ngIf="age?.errors?.['required']">
+          Please enter a valid age
+        </mat-error>
       </mat-form-field>
       <a mat-stroked-button color="warn" title="Cancel" [routerLink]="['']">
         Cancel

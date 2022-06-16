@@ -1,9 +1,21 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  NonNullableFormBuilder,
+  UntypedFormBuilder,
+  UntypedFormGroup,
+} from '@angular/forms';
 import { Observable } from 'rxjs';
 import { combineLatestWith, map } from 'rxjs/operators';
+import { CreateUserDTO } from 'src/app/core/models/create-user.dto';
 import { FormValidators } from 'src/app/core/validators/form-validators';
 import { UsersService } from '../users.service';
+export type ControlsOf<T extends Record<string, any>> = {
+  [K in keyof T]: T[K] extends Record<any, any>
+    ? FormGroup<ControlsOf<T[K]>>
+    : FormControl<T[K]>;
+};
 
 @Component({
   selector: 'app-create-user',
@@ -11,18 +23,22 @@ import { UsersService } from '../users.service';
   styleUrls: ['./create-user.component.scss'],
 })
 export class CreateUserComponent implements OnInit {
-  form: UntypedFormGroup = this.fb.group(
+  hidePassword = true;
+  hideRPassword = true;
+  form = this.fb.group<ControlsOf<CreateUserDTO & { repeatPassword: string }>>(
     {
-      username: [
+      username: this.fb.control(
         { value: '', disabled: true },
-        FormValidators.usernameValidators(),
-      ],
-      name: ['', FormValidators.nameValidators()],
-      surnames: ['', FormValidators.surnamesValidators()],
-      email: ['', FormValidators.emailValidators()],
-      password: ['', FormValidators.passwordValidators()],
-      repeatPassword: ['', FormValidators.passwordValidators()],
-      age: [null, FormValidators.ageValidators()],
+        {
+          validators: FormValidators.usernameValidators(),
+        }
+      ),
+      name: this.fb.control('', FormValidators.nameValidators()),
+      surnames: this.fb.control('', FormValidators.surnamesValidators()),
+      email: this.fb.control('', FormValidators.emailValidators()),
+      password: this.fb.control('', FormValidators.passwordValidators()),
+      repeatPassword: this.fb.control('', FormValidators.passwordValidators()),
+      age: this.fb.control(0, FormValidators.ageValidators()),
     },
     {
       validators: [FormValidators.matchPasswordsValidators()],
@@ -30,7 +46,30 @@ export class CreateUserComponent implements OnInit {
     }
   );
 
-  constructor(private fb: UntypedFormBuilder, private usersService: UsersService) {}
+  constructor(
+    private fb: NonNullableFormBuilder,
+    private usersService: UsersService
+  ) {}
+
+  public get name(): FormControl<string> {
+    return this.form.controls.name;
+  }
+  public get surnames(): FormControl<string> {
+    return this.form.controls.surnames;
+  }
+  public get email(): FormControl<string> {
+    return this.form.controls.email;
+  }
+  public get password(): FormControl<string> {
+    return this.form.controls.password;
+  }
+  public get repeatPassword(): FormControl<string> {
+    return this.form.controls.repeatPassword;
+  }
+  public get age(): FormControl<number> {
+    return this.form.controls.age;
+  }
+
   ngOnInit(): void {
     const nameValues$: Observable<string> = this.form.get('name')!.valueChanges;
     const surnamesValues$: Observable<string> =
@@ -51,8 +90,7 @@ export class CreateUserComponent implements OnInit {
   }
 
   onSubmit(): void {
-    console.log(this.form.value, this.form.getRawValue());
     const dto = this.form.getRawValue();
-    this.usersService.createUser(dto).subscribe(console.log, console.error);
+    this.usersService.createUser(dto).subscribe();
   }
 }
