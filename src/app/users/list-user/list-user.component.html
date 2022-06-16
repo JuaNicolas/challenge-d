@@ -1,3 +1,6 @@
+<mat-toolbar>
+  <span>User List</span>
+</mat-toolbar>
 <ng-container *ngIf="users$ | async as users; else loading">
   <table
     mat-table
@@ -19,17 +22,9 @@
           mat-stroked-button
           color="warn"
           [title]="'Create user'"
-          [routerLink]="['create']"
+          [routerLink]="['../create']"
         >
           Create user
-        </a>
-        <a
-          mat-stroked-button
-          color="warn"
-          [title]="'Create user'"
-          [routerLink]="['']"
-        >
-          Back
         </a>
       </td>
     </ng-container>
@@ -52,7 +47,7 @@
               mat-stroked-button
               color="primary"
               [title]="'Update ' + element.name"
-              [routerLink]="['update', element.id]"
+              [routerLink]="['../update', element.id]"
             >
               Edit
             </a>
@@ -60,7 +55,7 @@
               mat-stroked-button
               color="warn"
               [title]="'Delete ' + element.name"
-              [routerLink]="['delete', element.id]"
+              [routerLink]="['../delete', element.id]"
             >
               Delete
             </a>
