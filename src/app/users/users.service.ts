@@ -6,21 +6,27 @@ import { DeleteUserDTO } from '../core/models/delete-user.dto';
 import { DesactivateUserDTO } from '../core/models/desactivate-user.dto';
 import { UpdateUserDTO } from '../core/models/update-user.dto';
 import { User } from '../core/models/user';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UsersService {
   private readonly URL = ' http://localhost:3000/users';
-  constructor(private httpCLient: HttpClient) {}
+
+  constructor(
+    private readonly httpCLient: HttpClient,
+    private readonly snackBar: MatSnackBar
+  ) {}
 
   getUser(id: number): Observable<User> {
     return this.httpCLient.get<User>(`${this.URL}/${id}`).pipe(
-      catchError(() =>
-        throwError(() => ({
+      catchError(() => {
+        this.openSnackBar(`User with id ${id} not found.`);
+        return throwError(() => ({
           message: `User with id ${id} not found.`,
-        }))
-      )
+        }));
+      })
     );
   }
 
@@ -72,5 +78,13 @@ export class UsersService {
       catchError(() => this.getUser(id)),
       map(() => true)
     );
+  }
+
+  private openSnackBar(message: string) {
+    this.snackBar.open(message, undefined, {
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom',
+      duration: 2000,
+    });
   }
 }
