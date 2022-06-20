@@ -26,6 +26,14 @@ export class FormValidators {
         return null;
       }
 
+      if (!passwordControl.value || !repeatPasswordControl.value) {
+        return null;
+      }
+
+      if (!passwordControl.dirty || !repeatPasswordControl.dirty) {
+        return null;
+      }
+
       return passwordControl.value === repeatPasswordControl.value
         ? null
         : { dismatch: true };
