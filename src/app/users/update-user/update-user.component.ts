@@ -1,20 +1,23 @@
-import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { NonNullableFormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   catchError,
   combineLatestWith,
   EMPTY,
-  filter,
   iif,
   map,
   mergeMap,
   Observable,
   of,
+  Subject,
+  takeUntil,
   tap,
   throwError,
 } from 'rxjs';
+import { UpdateUserDTO } from 'src/app/core/models/update-user.dto';
 import { User } from 'src/app/core/models/user';
+import { ControlsOf } from 'src/app/core/validators/form-controlsof.type';
 import { FormValidators } from 'src/app/core/validators/form-validators';
 import { UsersService } from '../users.service';
 
@@ -23,16 +26,18 @@ import { UsersService } from '../users.service';
   templateUrl: './update-user.component.html',
   styleUrls: ['./update-user.component.scss'],
 })
-export class UpdateUserComponent implements OnInit {
-  form: UntypedFormGroup = this.fb.group({
-    id: this.activedRouter.snapshot.paramMap.get('id'),
-    username: [
+export class UpdateUserComponent implements OnInit, OnDestroy {
+  private readonly subject$ = new Subject<void>();
+  // form = this.fb.group<ControlsOf<CreateUserDTO & { repeatPassword: string }>>(
+  form = this.fb.group<ControlsOf<UpdateUserDTO>>({
+    id: this.fb.control(0),
+    username: this.fb.control(
       { value: '', disabled: true },
-      FormValidators.usernameValidators(),
-    ],
-    name: ['', FormValidators.nameValidators()],
-    surnames: ['', FormValidators.surnamesValidators()],
-    age: ['', FormValidators.ageValidators()],
+      FormValidators.usernameValidators()
+    ),
+    name: this.fb.control('', FormValidators.nameValidators()),
+    surnames: this.fb.control('', FormValidators.surnamesValidators()),
+    age: this.fb.control(0, FormValidators.ageValidators()),
   });
 
   vm$: Observable<User> = this.activedRouter.paramMap.pipe(
@@ -61,7 +66,7 @@ export class UpdateUserComponent implements OnInit {
   );
 
   constructor(
-    private fb: UntypedFormBuilder,
+    private fb: NonNullableFormBuilder,
     private activedRouter: ActivatedRoute,
     private usersService: UsersService,
     private router: Router
@@ -74,6 +79,7 @@ export class UpdateUserComponent implements OnInit {
 
     nameValues$
       .pipe(
+        takeUntil(this.subject$),
         combineLatestWith(surnamesValues$),
         map(([name, surnames]) => {
           const [firstSurname, secondSurname] = surnames.split(' ');
@@ -84,6 +90,11 @@ export class UpdateUserComponent implements OnInit {
         })
       )
       .subscribe((username) => this.form.get('username')?.setValue(username));
+  }
+
+  ngOnDestroy(): void {
+    this.subject$.next();
+    this.subject$.complete();
   }
 
   onSubmit(): void {

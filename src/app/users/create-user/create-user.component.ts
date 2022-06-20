@@ -1,28 +1,20 @@
-import { Component, OnInit } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  NonNullableFormBuilder,
-  UntypedFormBuilder,
-  UntypedFormGroup,
-} from '@angular/forms';
-import { Observable } from 'rxjs';
-import { combineLatestWith, map } from 'rxjs/operators';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormControl, NonNullableFormBuilder } from '@angular/forms';
+import { Router } from '@angular/router';
+import { Observable, Subject } from 'rxjs';
+import { combineLatestWith, map, takeUntil } from 'rxjs/operators';
 import { CreateUserDTO } from 'src/app/core/models/create-user.dto';
+import { ControlsOf } from 'src/app/core/validators/form-controlsof.type';
 import { FormValidators } from 'src/app/core/validators/form-validators';
 import { UsersService } from '../users.service';
-export type ControlsOf<T extends Record<string, any>> = {
-  [K in keyof T]: T[K] extends Record<any, any>
-    ? FormGroup<ControlsOf<T[K]>>
-    : FormControl<T[K]>;
-};
 
 @Component({
   selector: 'app-create-user',
   templateUrl: './create-user.component.html',
   styleUrls: ['./create-user.component.scss'],
 })
-export class CreateUserComponent implements OnInit {
+export class CreateUserComponent implements OnInit, OnDestroy {
+  private readonly subject$ = new Subject<void>();
   hidePassword = true;
   hideRPassword = true;
   form = this.fb.group<ControlsOf<CreateUserDTO & { repeatPassword: string }>>(
@@ -47,8 +39,9 @@ export class CreateUserComponent implements OnInit {
   );
 
   constructor(
-    private fb: NonNullableFormBuilder,
-    private usersService: UsersService
+    private readonly fb: NonNullableFormBuilder,
+    private readonly usersService: UsersService,
+    private readonly router: Router
   ) {}
 
   public get name(): FormControl<string> {
@@ -77,6 +70,7 @@ export class CreateUserComponent implements OnInit {
 
     nameValues$
       .pipe(
+        takeUntil(this.subject$),
         combineLatestWith(surnamesValues$),
         map(([name, surnames]) => {
           const [firstSurname, secondSurname] = surnames.split(' ');
@@ -89,8 +83,15 @@ export class CreateUserComponent implements OnInit {
       .subscribe((username) => this.form.get('username')?.setValue(username));
   }
 
+  ngOnDestroy(): void {
+    this.subject$.next();
+    this.subject$.complete();
+  }
+
   onSubmit(): void {
     const dto = this.form.getRawValue();
-    this.usersService.createUser(dto).subscribe();
+    this.usersService
+      .createUser(dto)
+      .subscribe(() => this.router.navigate(['..']));
   }
 }
